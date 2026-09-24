@@ -25,7 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-scale: 20
+          node-version: 20 # Changed from node-scale to node-version
           cache: 'npm' # or 'yarn' / 'pnpm'
 
       - name: Install dependencies
