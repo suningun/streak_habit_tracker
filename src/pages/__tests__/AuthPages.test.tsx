@@ -1,3 +1,4 @@
+import { AuthError } from "@supabase/supabase-js"
 import { cleanup, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MemoryRouter } from "react-router-dom"
@@ -72,8 +73,8 @@ describe("Auth Pages Integration", () => {
     it("shows generic error message on failed sign in", async () => {
       const user = userEvent.setup()
       vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
-        data: { user: null, session: null },
-        error: { name: "AuthApiError", message: "Invalid login credentials", status: 400 } as MockAuthError,
+        data: { user: null, session: null, weakPassword: null },
+        error: { name: "AuthApiError", message: "Invalid login credentials", status: 400 } as unknown as AuthError,
       })
 
       render(
