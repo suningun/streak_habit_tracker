@@ -1,3 +1,5 @@
+import { AvatarUpload } from "@/components/tracker/AvatarUpload"
+import { ErrorBoundary } from "@/components/common/ErrorBoundary"
 import {
   Cloud,
   Flame,
@@ -8,8 +10,8 @@ import {
   Sun,
   WifiOff,
 } from "lucide-react"
-import { useEffect, useState } from "react"
 
+import { useEffect, useState } from "react"
 import { HabitCard } from "@/components/tracker/HabitCard"
 import { TaskDialog, type TaskType } from "@/components/tracker/TaskDialog"
 import { useAuth } from "@/context/AuthContext"
@@ -17,9 +19,17 @@ import { useDebounce } from "@/hooks/useDebounce"
 import { useHabits } from "@/hooks/useHabits"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { useTheme, type Theme } from "@/lib/theme-provider"
+
 import { cn } from "@/lib/utils"
 
+
 const tabs = ["All", "Habits", "Dailies", "To-dos"] as const
+function BuggyComponent({ shouldCrash }: { shouldCrash?: boolean }) {
+  if (shouldCrash) {
+    throw new Error("Simulated Habit List crash!")
+  }
+  return <div>Habit items running normally...</div>
+}
 
 export function Dashboard() {
   const { user, signOut } = useAuth()
@@ -116,37 +126,43 @@ export function Dashboard() {
   return (
     <main className="min-h-svh bg-background px-3 py-4 text-foreground sm:px-5 sm:py-8">
       <div className="mx-auto flex min-h-[calc(100svh-2rem)] w-full max-w-[980px] flex-col rounded-[2rem] border border-border/80 bg-background shadow-[0_20px_60px_-36px_rgba(99,46,30,0.4)] sm:min-h-[calc(100svh-4rem)] lg:rounded-[2.5rem]">
-        <header className="flex items-center justify-between px-5 pt-6 pb-5">
-          <div className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-              <Flame className="size-5 fill-current" />
-            </span>
-            <div>
-              <p className="text-xs text-muted-foreground">Good to see you</p>
-              <h1 className="font-heading text-lg font-semibold">
-                {user?.email?.split("@")[0] ?? "Friend"}
-              </h1>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 rounded-full border border-border px-2.5 py-1.5 text-[10px] font-semibold text-muted-foreground">
-              {online ? (
-                <Cloud className="size-3.5 text-primary" />
-              ) : (
-                <WifiOff className="size-3.5" />
-              )}
-              {online ? "Synced" : "Offline"}
-            </span>
-            <button
-              type="button"
-              onClick={() => void signOut()}
-              aria-label="Sign out"
-              className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted"
-            >
-              <LogOut className="size-4" />
-            </button>
-          </div>
-        </header>
+<ErrorBoundary sectionName="Header Navigation">
+  <header className="flex items-center justify-between px-5 pt-6 pb-5">
+    <div className="flex items-center gap-3">
+      {user?.id ? (
+        <AvatarUpload userId={user.id} />
+      ) : (
+        <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+          <Flame className="size-5 fill-current" />
+        </span>
+      )}
+      <div>
+        <p className="text-xs text-muted-foreground">Good to see you</p>
+        <h1 className="font-heading text-lg font-semibold">
+          {user?.email?.split("@")[0] ?? "Friend"}
+        </h1>
+      </div>
+    </div>
+    <div className="flex items-center gap-2">
+      <span className="flex items-center gap-1 rounded-full border border-border px-2.5 py-1.5 text-[10px] font-semibold text-muted-foreground">
+        {online ? (
+          <Cloud className="size-3.5 text-primary" />
+        ) : (
+          <WifiOff className="size-3.5" />
+        )}
+        {online ? "Synced" : "Offline"}
+      </span>
+      <button
+        type="button"
+        onClick={() => void signOut()}
+        aria-label="Sign out"
+        className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted"
+      >
+        <LogOut className="size-4" />
+      </button>
+    </div>
+  </header>
+</ErrorBoundary>
         <section className="flex items-center justify-between border-y border-border/70 px-5 py-4">
           <div>
             <p className="text-[10px] font-bold tracking-[0.14em] text-muted-foreground uppercase">
@@ -188,6 +204,13 @@ export function Dashboard() {
             ))}
           </div>
         </nav>
+        <ErrorBoundary sectionName="Habit List">
+          <section className="p-4 border rounded-lg">
+    <h2 className="text-lg font-bold">Habit List</h2>
+
+    {/* Temporarily render the crashing component */}
+    <BuggyComponent shouldCrash={true} />
+  </section>
         <section className="flex flex-1 flex-col gap-3 px-4 pb-6">
           <label className="flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-3 text-muted-foreground focus-within:border-primary">
             <Search className="size-4" />
@@ -258,6 +281,7 @@ export function Dashboard() {
             </div>
           )}
         </section>
+        </ErrorBoundary>
         <footer className="flex items-center justify-center gap-3 border-t border-border/70 px-5 py-4 text-[11px] text-muted-foreground">
           <span>Theme</span>
           {themeOptions.map(({ value, label }) => (
