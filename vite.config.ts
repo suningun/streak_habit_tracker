@@ -5,6 +5,7 @@ import { defineConfig } from "vitest/config"
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/streak_habit_tracker/",
   plugins: [react(), tailwindcss()],
   test: {
     environment: "jsdom",
