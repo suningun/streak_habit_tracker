@@ -69,6 +69,7 @@ vi.mock("@/lib/supabase", () => {
       from: vi.fn(() => ({
         select: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
+        in: vi.fn().mockReturnThis(), // 👈 ADDED THIS METHOD TO FIX THE CHAIN
         order: vi.fn().mockReturnValue({
           order: vi.fn().mockResolvedValue({ data: mockHabits, error: null }),
           data: mockHabits,
@@ -164,6 +165,6 @@ describe("Dashboard Page", () => {
     const dailiesTab = screen.getByRole("button", { name: "Dailies" })
     await user.click(dailiesTab)
 
-    expect(await screen.findByText("Dailies are ready for their own view")).toBeInTheDocument()
+    expect(screen.getByText("Create a dailie to start building your rhythm.")).toBeInTheDocument();
   })
 })

@@ -15,6 +15,16 @@ type MockAuthError = Parameters<typeof supabase.auth.signInWithPassword> extends
 
 // Mock supabase client
 vi.mock("@/lib/supabase", () => {
+  const mockQueryBuilder = {
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    in: vi.fn().mockReturnThis(),
+    order: vi.fn().mockResolvedValue({ data: [], error: null }),
+    insert: vi.fn().mockResolvedValue({ data: null, error: null }),
+    update: vi.fn().mockResolvedValue({ data: null, error: null }),
+    delete: vi.fn().mockResolvedValue({ data: null, error: null }),
+  }
+
   return {
     supabase: {
       auth: {
@@ -26,7 +36,7 @@ vi.mock("@/lib/supabase", () => {
         signUp: vi.fn(),
         signOut: vi.fn(),
       },
-      from: vi.fn(),
+      from: vi.fn().mockReturnValue(mockQueryBuilder),
     },
   }
 })

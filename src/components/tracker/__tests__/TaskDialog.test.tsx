@@ -56,7 +56,10 @@ describe("TaskDialog", () => {
     renderDialog(onSubmit)
 
     await user.selectOptions(screen.getByLabelText("Type"), "daily")
-    await user.type(screen.getByLabelText("Habit Title"), "Drink water")
+    
+    // Use screen.getByLabelText(/title/i) to dynamically match 
+    // either "Daily Title" or "Habit Title" regardless of type selection
+    await user.type(screen.getByLabelText(/title/i), "Drink water")
     await user.click(screen.getByRole("button", { name: "Create task" }))
 
     expect(onSubmit).toHaveBeenCalledWith(

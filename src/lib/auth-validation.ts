@@ -9,15 +9,20 @@ export function validateEmail(email: string) {
 }
 
 export function validatePassword(password: string) {
-  if (password.length < 8) return "Password must be at least 8 characters long."
-  if (!/\d/.test(password) || !/[^A-Za-z\d]/.test(password)) {
+  const trimmed = password.trim()
+  if (trimmed.length < 8) return "Password must be at least 8 characters long."
+  if (!/\d/.test(trimmed) || !/[^A-Za-z0-9]/.test(trimmed)) {
     return "Must contain at least 1 number and 1 special character."
   }
   return null
 }
 
 export function validateConfirmPassword(password: string, confirmation: string) {
-  if (!confirmation || password !== confirmation) return "Passwords do not match."
+  const trimmedPassword = password.trim()
+  const trimmedConfirmation = confirmation.trim()
+  if (!trimmedConfirmation || trimmedPassword !== trimmedConfirmation) {
+    return "Passwords do not match."
+  }
   return null
 }
 
