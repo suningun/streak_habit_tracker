@@ -8,7 +8,9 @@ export default defineConfig({
   optimizeDeps: {
     include: ['lucide-react'], // Pre-bundles Lucide icons so Vite doesn't load 5MB of unbundled ES modules
   },
+  base: '/streak_habit_tracker/',
   plugins: [
+    
     react(),
     tailwindcss(),
     VitePWA({
