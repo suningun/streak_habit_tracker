@@ -5,7 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 export default defineConfig({
-  base: '/streak_habit_tracker/',
+  // Dynamically uses '/' on Vercel and '/streak_habit_tracker/' on GitHub Pages
+  base: process.env.VERCEL ? '/' : '/streak_habit_tracker/',
   optimizeDeps: {
     include: ['lucide-react'],
   },
@@ -13,11 +14,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
-            return 'vendor';
+          if (
+            id.includes('node_modules/react') ||
+            id.includes('node_modules/react-dom') ||
+            id.includes('node_modules/react-router-dom')
+          ) {
+            return 'vendor'
           }
           if (id.includes('node_modules/@supabase')) {
-            return 'supabase';
+            return 'supabase'
           }
         },
       },
@@ -31,15 +36,15 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'pwa-64x64.png'],
       devOptions: {
-        enabled: true
+        enabled: true,
       },
       manifest: {
-        id: '/streak_habit_tracker/',
+        id: '/',
         name: 'Rhythm Habit Tracker',
         short_name: 'Rhythm',
         description: 'Track your daily rhythm and habits offline or online.',
-        start_url: '/streak_habit_tracker/',
-        scope: '/streak_habit_tracker/',
+        start_url: '/',
+        scope: '/',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
@@ -49,26 +54,26 @@ export default defineConfig({
             src: 'pwa-64x64.png',
             sizes: '96x96',
             type: 'image/png',
-            purpose: 'any'
+            purpose: 'any',
           },
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any'
+            purpose: 'any',
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any'
+            purpose: 'any',
           },
           {
             src: 'maskable-icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'maskable'
-          }
+            purpose: 'maskable',
+          },
         ],
         screenshots: [
           {
@@ -76,32 +81,33 @@ export default defineConfig({
             sizes: '2560x1440',
             type: 'image/png',
             form_factor: 'wide',
-            label: 'Rhythm Tracker Desktop Dashboard'
+            label: 'Rhythm Tracker Desktop Dashboard',
           },
           {
             src: 'screenshot-mobile.png',
             sizes: '1500x2114',
             type: 'image/png',
             form_factor: 'narrow',
-            label: 'Rhythm Tracker Mobile Dashboard'
-          }
-        ]
+            label: 'Rhythm Tracker Mobile Dashboard',
+          },
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         maximumFileSizeToCacheInBytes: 3000000,
-        navigateFallback: '/streak_habit_tracker/index.html',
+        navigateFallback: '/index.html',
         runtimeCaching: [
           {
-            urlPattern: ({ request }: { request: Request }) => request.destination === 'image',
+            urlPattern: ({ request }: { request: Request }) =>
+              request.destination === 'image',
             handler: 'CacheFirst',
             options: {
               cacheName: 'images-cache',
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 30 * 24 * 60 * 60
-              }
-            }
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+            },
           },
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/rest\/v1\/.*/i,
@@ -110,18 +116,18 @@ export default defineConfig({
               cacheName: 'api-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 24 * 60 * 60
+                maxAgeSeconds: 24 * 60 * 60,
               },
-              networkTimeoutSeconds: 3
-            }
-          }
-        ]
-      }
-    })
+              networkTimeoutSeconds: 3,
+            },
+          },
+        ],
+      },
+    }),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(import.meta.dirname, './src')
-    }
-}
+      '@': path.resolve(import.meta.dirname, './src'),
+    },
+  },
 })

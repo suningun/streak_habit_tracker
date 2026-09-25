@@ -8,7 +8,7 @@ const SignUp = lazy(() => import("@/pages/SignUp").then(m => ({ default: m.SignU
 
 export function App() {
   return (
-    <BrowserRouter basename="/streak_habit_tracker">
+    <BrowserRouter>
       <Suspense fallback={<div className="flex h-screen items-center justify-center bg-background text-muted-foreground">Loading...</div>}>
         <Routes>
           <Route path="/login" element={<Login />} />
