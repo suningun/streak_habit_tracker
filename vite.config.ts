@@ -5,12 +5,25 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 export default defineConfig({
-  optimizeDeps: {
-    include: ['lucide-react'], // Pre-bundles Lucide icons so Vite doesn't load 5MB of unbundled ES modules
-  },
   base: '/streak_habit_tracker/',
+  optimizeDeps: {
+    include: ['lucide-react'],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
+            return 'vendor';
+          }
+          if (id.includes('node_modules/@supabase')) {
+            return 'supabase';
+          }
+        },
+      },
+    },
+  },
   plugins: [
-    
     react(),
     tailwindcss(),
     VitePWA({
@@ -21,12 +34,12 @@ export default defineConfig({
         enabled: true
       },
       manifest: {
-        id: '/',
+        id: '/streak_habit_tracker/',
         name: 'Rhythm Habit Tracker',
         short_name: 'Rhythm',
         description: 'Track your daily rhythm and habits offline or online.',
-        start_url: '/',
-        scope: '/',
+        start_url: '/streak_habit_tracker/',
+        scope: '/streak_habit_tracker/',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
@@ -77,7 +90,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         maximumFileSizeToCacheInBytes: 3000000,
-        navigateFallback: '/index.html',
+        navigateFallback: '/streak_habit_tracker/index.html',
         runtimeCaching: [
           {
             urlPattern: ({ request }: { request: Request }) => request.destination === 'image',
@@ -108,7 +121,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(import.meta.dirname, './src')
     }
-  }
+}
 })
