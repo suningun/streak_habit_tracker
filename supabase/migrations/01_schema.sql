@@ -2,6 +2,7 @@ create type public.task_type as enum ('habit', 'daily', 'todo');
 create type public.priority_level as enum ('low', 'medium', 'high');
 create type public.habit_log_type as enum ('positive', 'negative');
 
+
 create table public.tasks (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users,
