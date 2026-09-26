@@ -1,11 +1,11 @@
-import { defineConfig } from 'vite'
+// vite.config.ts
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 export default defineConfig({
-  // Dynamically uses '/' on Vercel and '/streak_habit_tracker/' on GitHub Pages
   base: process.env.VERCEL ? '/' : '/streak_habit_tracker/',
   optimizeDeps: {
     include: ['lucide-react'],
@@ -39,12 +39,12 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        id: '/',
+        id: './',
         name: 'Rhythm Habit Tracker',
         short_name: 'Rhythm',
         description: 'Track your daily rhythm and habits offline or online.',
-        start_url: '/',
-        scope: '/',
+        start_url: './',
+        scope: './',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
@@ -75,27 +75,12 @@ export default defineConfig({
             purpose: 'maskable',
           },
         ],
-        screenshots: [
-          {
-            src: 'screenshot-desktop.png',
-            sizes: '2560x1440',
-            type: 'image/png',
-            form_factor: 'wide',
-            label: 'Rhythm Tracker Desktop Dashboard',
-          },
-          {
-            src: 'screenshot-mobile.png',
-            sizes: '1500x2114',
-            type: 'image/png',
-            form_factor: 'narrow',
-            label: 'Rhythm Tracker Mobile Dashboard',
-          },
-        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         maximumFileSizeToCacheInBytes: 3000000,
-        navigateFallback: '/index.html',
+        // DISABLE navigateFallback to stop precache lookup failures when using HashRouter
+        navigateFallback: null,
         runtimeCaching: [
           {
             urlPattern: ({ request }: { request: Request }) =>
@@ -129,5 +114,10 @@ export default defineConfig({
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),
     },
+  },
+  test: {
+    environment: 'jsdom',
+    globals: false,
+    setupFiles: ['./src/test/setup.ts'],
   },
 })

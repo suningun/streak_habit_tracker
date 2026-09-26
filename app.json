@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Rhythm Habit Tracker",
+    "slug": "rhythm-habit-tracker",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rhythm.habitracker"
+    },
+    "android": {
+      "package": "com.rhythm.habitracker",
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./favicon.ico"
+    }
+  }
+}

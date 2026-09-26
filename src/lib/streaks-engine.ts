@@ -1,4 +1,6 @@
-import type { HabitLog } from "@/hooks/useHabits"
+// Relative (not "@/") so the native import graph stays resolvable even when an
+// editor infers a project with no tsconfig and therefore no "paths" mapping.
+import type { HabitLog } from "./habit-types"
 
 export type HabitStrength = "strong" | "steady" | "slipping"
 

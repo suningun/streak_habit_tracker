@@ -1,16 +1,10 @@
 import { useCallback, useEffect, useState } from "react"
 
 import { useAuth } from "@/context/AuthContext"
+import type { HabitLog, HabitLogType } from "@/lib/habit-types"
 import { supabase } from "@/lib/supabase"
 
-export type HabitLogType = "positive" | "negative"
-export type HabitLog = {
-  id: string
-  task_id: string
-  user_id: string
-  log_type: HabitLogType
-  logged_at: string
-}
+export type { HabitLog, HabitLogType }
 
 export type Habit = {
   id: string
